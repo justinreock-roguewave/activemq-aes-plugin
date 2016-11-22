@@ -6,9 +6,8 @@ import org.apache.activemq.broker.Broker;
 import org.apache.activemq.broker.BrokerFilter;
 import org.apache.activemq.broker.ProducerBrokerExchange;
 import org.apache.activemq.command.Message;
+import org.apache.activemq.command.MessageDispatch;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.activemq.broker.ConnectionContext;
-import org.apache.activemq.broker.region.MessageReference;
 
 public class ActiveMQPGPBroker extends BrokerFilter {
 
@@ -59,6 +58,8 @@ public class ActiveMQPGPBroker extends BrokerFilter {
 		mesgBody = mesgBody.replace("ENCRYPTED: ", "DECRYPTED: ");
 		mesgBody = "D: " + mesgBody;
 		
+		System.out.println("Decrypting message to: " + mesgBody);
+		
 		try {
 		    tm.setText(mesgBody);
 		}
@@ -85,10 +86,11 @@ public class ActiveMQPGPBroker extends BrokerFilter {
 		next.send(producerExchange, encryptedMessage);
 	}
 	
-	public void messageConsumed(ConnectionContext context, MessageReference messageReference) {
-		ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) messageReference.getMessage();
+	public void preProcessDispatch(MessageDispatch messageDispatch) {
+		ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) messageDispatch.getMessage();
 		ActiveMQTextMessage decryptedMessage = (ActiveMQTextMessage) decryptMessage(encryptedMessage);
-		next.messageConsumed(context, decryptedMessage);
+		messageDispatch.setMessage(decryptedMessage);
+		next.preProcessDispatch(messageDispatch);
 		
 	}
 	
