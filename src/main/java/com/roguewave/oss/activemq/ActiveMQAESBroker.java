@@ -30,7 +30,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
 	
 	public ActiveMQAESBroker(Broker next) {
 		super(next);
-		System.out.println(this.getBrokerSequenceId());
+		//System.out.println(this.getBrokerSequenceId());
 	}
 	
     private void init() throws Exception {
