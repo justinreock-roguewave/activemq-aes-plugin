@@ -22,15 +22,12 @@ import org.slf4j.LoggerFactory;
 public class ActiveMQAESBroker extends BrokerFilter {
 
 	private static Logger LOG = LoggerFactory.getLogger(ActiveMQAESBroker.class);
-	
-    private String keyStr = "thisismyactivemq";
-
+	private String keyStr = System.getProperty("activemq.aeskey");
     private Key aesKey = null;
     private Cipher cipher = null;
 	
 	public ActiveMQAESBroker(Broker next) {
 		super(next);
-		//System.out.println(this.getBrokerSequenceId());
 	}
 	
     private void init() throws Exception {
