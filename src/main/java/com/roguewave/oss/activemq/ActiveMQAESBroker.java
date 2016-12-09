@@ -1,6 +1,7 @@
 package com.roguewave.oss.activemq;
 
 import java.security.Key;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -75,6 +76,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
 		
 		try { 
 		    mesgBody = encrypt(mesgBody);
+		    mesgBody = Base64.getEncoder().encodeToString(mesgBody.getBytes());
 		} 
 		catch (Exception e) {
 			LOG.error("Could not encrypt message\n" + e.getMessage());
@@ -108,6 +110,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
 		}
 		
 		try { 
+			mesgBody = new String(Base64.getDecoder().decode(mesgBody),"utf-8");
 		    mesgBody = decrypt(mesgBody);
 		} 
 		catch (Exception e) {
