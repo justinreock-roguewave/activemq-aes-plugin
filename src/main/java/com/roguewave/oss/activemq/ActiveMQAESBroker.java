@@ -36,7 +36,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
         }
         if (aesKey == null) {
             aesKey = new SecretKeySpec(keyStr.getBytes(), "AES");
-            cipher = Cipher.getInstance("AES");
+            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
         }
     }
 	
