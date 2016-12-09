@@ -1,9 +1,11 @@
 package com.roguewave.oss.activemq;
 
 import java.security.Key;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.spec.IvParameterSpec;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -25,30 +27,32 @@ public class ActiveMQAESBroker extends BrokerFilter {
 	private String keyStr = System.getProperty("activemq.aeskey");
     private Key aesKey = null;
     private Cipher cipher = null;
+
+	private SecureRandom r = new SecureRandom();
 	
 	public ActiveMQAESBroker(Broker next) {
 		super(next);
 	}
-	
+		
     private void init() throws Exception {
         if (keyStr == null || keyStr.length() != 16) {
             throw new Exception("bad aes key configured");
         }
         if (aesKey == null) {
             aesKey = new SecretKeySpec(keyStr.getBytes(), "AES");
-            cipher = Cipher.getInstance("AES/CBC/PKCS7PADDING");
+            cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
         }
     }
 	
     public String encrypt(String text) throws Exception {
     	init();
-        cipher.init(Cipher.ENCRYPT_MODE, aesKey);
+        cipher.init(Cipher.ENCRYPT_MODE, aesKey, new IvParameterSpec(new byte[16]), r);
         return toHexString(cipher.doFinal(text.getBytes()));
     }
     
     public String decrypt(String text) throws Exception {
         init();
-        cipher.init(Cipher.DECRYPT_MODE, aesKey);
+        cipher.init(Cipher.DECRYPT_MODE, aesKey, new IvParameterSpec(new byte[16]), r);
         return new String(cipher.doFinal(toByteArray(text)));
     }
 
