@@ -36,7 +36,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
 		
     private void init() throws Exception {
         if (keyStr == null || keyStr.length() != 16) {
-            throw new Exception("bad aes key configured");
+            throw new Exception("Bad aes key configured - ensure that system property 'activemq.aeskey' is set to a 16 character string");
         }
         if (aesKey == null) {
             aesKey = new SecretKeySpec(keyStr.getBytes(), "AES");
