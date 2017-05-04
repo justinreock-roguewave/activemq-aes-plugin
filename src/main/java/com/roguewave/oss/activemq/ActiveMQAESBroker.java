@@ -139,15 +139,19 @@ public class ActiveMQAESBroker extends BrokerFilter {
 	}
 
 	public void send(ProducerBrokerExchange producerExchange, Message messageSend) throws Exception {
-		ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) encryptMessage(messageSend.getMessage());
-		next.send(producerExchange, encryptedMessage);
+		if (messageSend instanceof ActiveMQTextMessage) {
+		    ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) encryptMessage(messageSend.getMessage());
+		    next.send(producerExchange, encryptedMessage);
+		}
 	}
 	
 	public void preProcessDispatch(MessageDispatch messageDispatch) {
-		ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) messageDispatch.getMessage();
-		ActiveMQTextMessage decryptedMessage = (ActiveMQTextMessage) decryptMessage(encryptedMessage);
-		messageDispatch.setMessage(decryptedMessage);
-		next.preProcessDispatch(messageDispatch);		
+		if (messageDispatch.getMessage() instanceof ActiveMQTextMessage) {
+		    ActiveMQTextMessage encryptedMessage = (ActiveMQTextMessage) messageDispatch.getMessage();
+		    ActiveMQTextMessage decryptedMessage = (ActiveMQTextMessage) decryptMessage(encryptedMessage);
+		    messageDispatch.setMessage(decryptedMessage);
+		    next.preProcessDispatch(messageDispatch);		
+		}
 	}
 	
 }
