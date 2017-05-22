@@ -114,7 +114,7 @@ public class ActiveMQAESBroker extends BrokerFilter {
 		    mesgBody = decrypt(mesgBody);
 		} 
 		catch (Exception e) {
-			LOG.error("Could not decrypt message\n" + e.getMessage());
+			LOG.debug("Could not decrypt message\n" + e.getMessage());
 			return mesg;
 		}
 		

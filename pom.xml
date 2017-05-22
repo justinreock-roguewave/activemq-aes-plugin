@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.roguewave.oss.activemq</groupId>
   <artifactId>amq-aes-plugin</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.3</version>
   <dependencies>
   	<dependency>
   		<groupId>org.apache.activemq</groupId>
