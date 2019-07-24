@@ -15,7 +15,9 @@ Add a system property called activemq.aeskey to ActiveMQ's JVM options, with a 1
 Update activemq.xml to load the plugin, by adding a block similar to the following:
 
 `<plugins>
+
     <bean xmlns="http://www.springframework.org/schema/beans" id="aesPlugin" class="com.roguewave.oss.activemq.ActiveMQAESBrokerPlugin"/>
+
 </plugins>`
 
 Upon restarting the broker, the plugin will log a message that it has loaded.
